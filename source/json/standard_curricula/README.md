@@ -39,39 +39,38 @@ Found at the [examination office](https://www.fin.ovgu.de/Studium/Während+des+S
 
 ```json
 {
+
   "spo": 2024,
   "degree": "CV",
   "isMaster": false,
   "isWinter": true,
   "totalSemesters": 7,
   "totalCredits": 210,
-  "semesters": [
+  "moduleGroups": [
     {
       ...
     },
     {
       ...
-    }
-  ],
-  "constraints": [
-    {
-      ...
-    }
+    },
+    ...
   ]
 }
 ```
 
-Eeach semester is its own json object as follows:
+Eeach moduleGroups is its own json object as follows:
 
 ```json
 {
-  "number": 1,
-  "totalCredits": 30,
-  "isWinter": true,
+  "category": "pf",
+  "totalCredits": 10,
+  "minGradedCredits": 5,
+  "weight": 50,
   "modules": [
     {
       ...
-    }
+    },
+    ...
   ]
 }
 ```
@@ -80,18 +79,14 @@ And each module looks as follows:
 
 ```json
 {
-  "category": "wpf",
-  "id": null, // can be null if no specific lecture is needed (free choice)
-  "credits": 5,
-  "weight": 100,
-},
-{
-  "category": "pf",
-  "id": "AuD", // not sure weather to use bookstacks, lsf abrevieation or module number
+  "id": "EinfInf",
   "credits": 10,
-  "weight": 50,
+  "semester": 1,
+  "altSemester": 2
 }
 ```
+
+> category can be `null`, if it doesnt have one (like the thesis)
 
 | name | category | relevant bachelors |
 |------|:--------:|------------------|
@@ -112,7 +107,3 @@ And each module looks as follows:
 | **Wahlpflicht Gestalten<br>und Anwenden**    | `'ge_an'` | _wif_ |
 | **Anwenden**                     | `'anw'`   | _wif_ |
 | **Schlüssel- und <br> Methoden kompetenzen** | `'smk'`   | _cv_ \| _inf_ \| _inginf_ |
-
-> also need to add a module for bachlor thesis / internship semester
-
-and constaints are used for defining the groups in which a specific amound of credits has to be graded _(and not only certified?!)_:
