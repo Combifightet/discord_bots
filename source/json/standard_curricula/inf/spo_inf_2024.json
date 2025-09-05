@@ -1,0 +1,323 @@
+{
+	"spo": 2024,
+	"degree": "INF",
+	"isMaster": false,
+	"isWinter": true,
+	"totalSemesters": 7,
+	"totalCredits": 210,
+	"moduleGroups": [
+		{
+			"category": "pf",
+			"totalCredits": 20,
+			"minGradedCredits": 20,
+			"weight": 50,
+			"modules": [
+				{
+					"id": "EinfInf",
+					"credits": 10,
+					"semester": 1,
+					"altSemester": 2
+				},
+				{
+					"id": "AuD",
+					"credits": 10,
+					"semester": 2,
+					"altSemester": 3
+				}
+			]
+		},
+		{
+			"category": "pf",
+			"totalCredits": 5,
+			"minGradedCredits": 5,
+			"weight": 100,
+			"modules": [
+				{
+					"id": "Se_ItPm",
+					"credits": 10,
+					"semester": 3,
+					"altSemester": 4
+				}
+			]
+		},
+		{
+			"category": "pf",
+			"totalCredits": 10,
+			"minGradedCredits": 5,
+			"weight": 50,
+			"modules": [
+				{
+					"id": "Mod",
+					"credits": 5,
+					"semester": 1,
+					"altSemester": 2
+				},
+				{
+					"id": "Db1",
+					"credits": 5,
+					"semester": 1,
+					"altSemester": 2
+				}
+			]
+		},
+		{
+			"category": "pf2",
+			"totalCredits": 15,
+			"minGradedCredits": 20,
+			"weight": 100,
+			"modules": [
+				{
+					"id": "Pgp",
+					"credits": 5,
+					"semester": 2,
+					"altSemester": 1
+				},
+				{
+					"id": "IS",
+					"credits": 5,
+					"semester": 3,
+					"altSemester": 4
+				},
+				{
+					"id": "SISY",
+					"credits": 5,
+					"semester": 4,
+					"altSemester": 3
+				}
+			]
+		},
+		{
+			"category": "wpf",
+			"totalCredits": 40,
+			"minGradedCredits": 20,
+			"weight": 100,
+			"modules": [
+				{
+					"id": "Wpf-Inf-M",
+					"credits": 5,
+					"semester": 5,
+					"altSemester": 6
+				},
+				{
+					"id": "Wpf-Inf",
+					"credits": 5,
+					"semester": 5,
+					"altSemester": 1
+				},
+				{
+					"id": "Wpf-Inf",
+					"credits": 5,
+					"semester": 5,
+					"altSemester": 1
+				},
+				{
+					"id": "Wpf-Inf",
+					"credits": 5,
+					"semester": 5,
+					"altSemester": 4
+				},
+				{
+					"id": "Wpf-Inf",
+					"credits": 5,
+					"semester": 6,
+					"altSemester": 5
+				},
+				{
+					"id": "Wpf-Inf",
+					"credits": 5,
+					"semester": 6,
+					"altSemester": 5
+				},
+				{
+					"id": "Wpf-Inf",
+					"credits": 5,
+					"semester": 6,
+					"altSemester": 6
+				},
+				{
+					"id": "Wpf-Inf",
+					"credits": 5,
+					"semester": 6,
+					"altSemester": 6
+				}
+			]
+		},
+		{
+			"category": "tech",
+			"totalCredits": 10,
+			"minGradedCredits": 5,
+			"weight": 50,
+			"modules": [
+				{
+					"id": "TI-1",
+					"credits": 5,
+					"semester": 3,
+					"altSemester": 2
+				},
+				{
+					"id": "TI-2",
+					"credits": 5,
+					"semester": 4,
+					"altSemester": 3
+				}
+			]
+		},
+		{
+			"category": "m",
+			"totalCredits": 20,
+			"minGradedCredits": 15,
+			"weight": 50,
+			"modules": [
+				{
+					"id": "M1",
+					"credits": 5,
+					"semester": 1,
+					"altSemester": 2
+				},
+				{
+					"id": "M2",
+					"credits": 5,
+					"semester": 2,
+					"altSemester": 1
+				},
+				{
+					"id": "Log",
+					"credits": 5,
+					"semester": 2,
+					"altSemester": 1
+				},
+				{
+					"id": "M3",
+					"credits": 5,
+					"semester": 3,
+					"altSemester": 4
+				}
+			]
+		},
+		{
+			"category": "theo",
+			"totalCredits": 15,
+			"minGradedCredits": 10,
+			"weight": 100,
+			"modules": [
+				{
+					"id": "M5",
+					"credits": 5,
+					"semester": 2,
+					"altSemester": 3
+				},
+				{
+					"id": "GThI",
+					"credits": 5,
+					"semester": 3,
+					"altSemester": 4
+				},
+				{
+					"id": "GThI 2",
+					"credits": 5,
+					"semester": 4,
+					"altSemester": 5
+				}
+			]
+		},
+		{
+			"category": "minor",
+			"totalCredits": 15,
+			"minGradedCredits": 10,
+			"weight": 100,
+			"modules": [
+				{
+					"id": "Minor",
+					"credits": 5,
+					"semester": 4,
+					"altSemester": 1
+				},
+				{
+					"id": "Minor",
+					"credits": 5,
+					"semester": 5,
+					"altSemester": 5
+				},
+				{
+					"id": "Minor",
+					"credits": 5,
+					"semester": 6,
+					"altSemester": 6
+				}
+			]
+		},
+		{
+			"category": "smk",
+			"totalCredits": 5,
+			"minGradedCredits": 5,
+			"weight": 50,
+			"modules": [
+				{
+					"id": "SchlüKo",
+					"credits": 5,
+					"semester": 1,
+					"altSemester": 4
+				}
+			]
+		},
+		{
+			"category": "smk",
+			"totalCredits": 25,
+			"minGradedCredits": 15,
+			"weight": 100,
+			"modules": [
+				{
+					"id": "WissSem",
+					"credits": 5,
+					"semester": 3,
+					"altSemester": 3
+				},
+				{
+					"id": "SDP",
+					"credits": 5,
+					"semester": 4,
+					"altSemester": 5
+				},
+				{
+					"id": "SoftPr",
+					"credits": 5,
+					"semester": 5,
+					"altSemester": 6
+				},
+				{
+					"id": "FinSmk",
+					"credits": 5,
+					"semester": 6,
+					"altSemester": 6
+				}
+			]
+		},
+		{
+			"category": null,
+			"totalCredits": 30,
+			"minGradedCredits": 30,
+			"weight": 100,
+			"modules": [
+				{
+					"id": "intern",
+					"credits": 18,
+					"semester": 7,
+					"altSemester": 7
+				},
+				{
+					"id": "thesis",
+					"credits": 10,
+					"semester": 7,
+					"altSemester": 7
+				},
+				{
+					"id": "colloquium",
+					"credits": 2,
+					"semester": 7,
+					"altSemester": 7
+				}
+			]
+		}
+	],
+	"info" : ""
+}
