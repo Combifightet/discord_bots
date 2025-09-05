@@ -18,6 +18,27 @@ async def on_ready():
 	for filename in os.listdir('source/cogs'):
 		if filename.endswith('.py'):
 			await bot.load_extension(f'cogs.{filename[:-3]}')
+	
+	# Sync all app commands
+	try:
+		synced = await bot.tree.sync()
+		print(f'Synced {len(synced)} application commands')
+		print(synced)
+	except Exception as e:
+		print(f"Error syncing commands: {e}")
+
+
+# Manual sync command for testing
+@bot.command()
+@commands.has_permissions(administrator=True)
+async def sync(ctx):
+	await ctx.message.delete()
+	try:
+		synced = await ctx.bot.tree.sync(guild=None)
+		print(f"Synced {len(synced)} command(s)")
+	except Exception as e:
+		print(f"Failed to sync: {e}")
+
 
 
 @bot.command()
