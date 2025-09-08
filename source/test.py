@@ -3,25 +3,29 @@ from bs4.element import ResultSet, Tag
 import requests
 
 class Meaning:
-	def __init__(self, meaning:str, tuples:tuple[str, str, str|None]|None, examples:list[str]):
+	def __init__(self, meaning:str, tuples:tuple[str, str, str | None] | None, examples:list[str]):
 		"""
 		Class that holds a meaning object, only used for structuring data
 		Args:
 			meaning (str): The meaning text
-			tuples (tuple[str, str, Optional[str]]|None): A tuple of additional information about the meaning, e.g. (Wortart, Substantiv, f)
+			tuples (tuple[str, str, str | None] | None): A tuple of additional information about the meaning<br>tuple(\<title\>, \<content\>, \<link\>)
 			examples (list[str]): A list of example sentences for this meaning
 		"""
 		self.meaning = meaning
 		self.tuples = tuples
 		self.examples = examples
 
-def findTuple(tuples:ResultSet, key:str) -> tuple[str, str]:
-	print(type(tuples))
+def tuplesToDict(tuples:ResultSet) -> dict[str, str]:
+	result:dict[str, str] = {}
 	for tuple in tuples:
-		result = tuple.find(string=lambda text: key in text if text else False)
-		if result is not None:
-			return (result, tuple.find('dd').text)
+		result[tuple.find('dt').text] = tuple.find('dd').text
+	return result
 
+def dictValWhereKeyContains(d:dict[str, str], keyPart:str, caseSensitive=False) -> str | None:
+	for k in d.keys():
+		if (caseSensitive and keyPart in k) or (not caseSensitive and keyPart.lower() in k.lower()):
+			return d[k]
+	return None
 
 def main():
 	word = 'Titel'
@@ -35,35 +39,41 @@ def main():
 
 	tuples:ResultSet = soup.find_all('dl', class_='tuple')
 
+	infos:dict[str, str] = tuplesToDict(tuples)
+
 	# <div class="division "  id="bedeutungen">
 	meaningHtml:Tag = soup.find('div', class_='division', id='bedeutungen')
 	meaning:str = meaningHtml.find('h2').text
-	meaningsHtml:Tag = meaningHtml.find_all('li')
+	meaningsHtml:Tag = meaningHtml.find_all('li', class_='enumeration__item')
+	for m in meaningsHtml:
+		subMeanings:Tag = m.find_all('li', class_='enumeration__sub-item')
+		for sm in subMeanings:
+			pass
 
 	meanings:list[list[str]] = []
 	meanings = meaningsHtml
-	Meaning()
+	# Meaning()
 
 
-	print()
 
 	print('\n')
-	print('Title:   ', str(title).replace('\\xad','').replace('\xad', ''))
-	print('Url:     ', url)
-	print(findTuple(tuples, 'Wortart'))
-	print(findTuple(tuples, 'Häufigkeit')) # - TODO: these need postprocessing
-	print(findTuple(tuples, 'Aussprache')) # - TODO: these need postprocessing
+	print('Title:     ', str(title).replace('\\xad','').replace('\xad', ''))
+	print('Url:       ', url)
+	print('Wortart:   ', dictValWhereKeyContains(infos, 'wortart'))
+	print('Häufigkeit:', dictValWhereKeyContains(infos, 'häufigkeit')) # - TODO: these need postprocessing
+	print('Aussprache:', dictValWhereKeyContains(infos, 'aussprache')) # - TODO: these need postprocessing
 	# --- Rechtschreibung ---
 	# --- Bedeutungen (n) ---            ! Wichtig
 	print(meaning)
-	# print(meanings)
-	for m in meanings:
-		print()
-		print(m.prettify())
+	# print(meaningHtml.prettify())
+	print(meanings[-1].prettify())
+	# for m in meanings:
+	# 	print()
+	# 	print(m.prettify())
 	# --- Synonyme zu <wort> ---
 	# --- Herkunft ---
 	# --- Grammatik ---
-	print('ImageUrl:', imagUrl)
+	print('ImageUrl:  ', imagUrl)
 	print('\n')
 
 	if (response.status_code>=400 and response.status_code<500):
