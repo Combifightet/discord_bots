@@ -44,7 +44,7 @@ class Duden(commands.Cog):
 
 			await interaction.response.send_message(
 				embed = embed,
-				ephemeral = True
+				ephemeral = True # only for debuggin final version sould send an actual message
 			)
 	
 
