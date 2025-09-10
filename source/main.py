@@ -36,6 +36,7 @@ async def sync(ctx):
 	try:
 		synced = await ctx.bot.tree.sync(guild=None)
 		print(f"Synced {len(synced)} command(s)")
+		await ctx.send(f'-# Synced {len(synced)} command(s)')
 	except Exception as e:
 		print(f"Failed to sync: {e}")
 

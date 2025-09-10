@@ -2,6 +2,8 @@ import discord
 from discord.ext import commands
 from discord import app_commands
 
+from typing import Optional
+
 from datetime import datetime
 from bs4 import BeautifulSoup
 from bs4.element import ResultSet, Tag
@@ -58,12 +60,12 @@ async def setup(bot):
 # ---------------------- Parsing Util ---------------------- #
 
 class Meaning:
-	def __init__(self, meaning:str|None, infos:dict[str, tuple[str, str|None]]|None, examples:list[str]):
+	def __init__(self, meaning:Optional[str], infos:Optional[dict[str, tuple[str, Optional[str]]]], examples:list[str]):
 		"""
 		Class that holds a meaning object, only used for structuring data
 		Args:
 			meaning (str): The meaning text
-			tuples (dict[str, tuple[str, str | None]] | None): A dict of additional information about the meaning<br>dict(\<title\>, tuple(\<content\>, \<link\>))
+			tuples (Optional[dict[str, tuple[str, Optional[str]]]]): A dict of additional information about the meaning<br>dict(\<title\>, tuple(\<content\>, \<link\>))
 			examples (list[str]): A list of example sentences for this meaning
 		"""
 		self.meaning = meaning
@@ -87,7 +89,7 @@ class Meaning:
 		return f'{self.meaning}\n{infoString}\n{examplesString}'
 	
 
-def tuplesToDict(tuples:ResultSet) -> dict[str, tuple[str, str|None]]:
+def tuplesToDict(tuples:ResultSet) -> dict[str, tuple[str, Optional[str]]]:
 	result:dict[str, str] = {}
 	for tuple in tuples:
 		linkTag:Tag = tuple.find('dd').find('a')
@@ -98,7 +100,7 @@ def tuplesToDict(tuples:ResultSet) -> dict[str, tuple[str, str|None]]:
 		result[tuple.find('dt').text] = (tuple.find('dd').text.lstrip('\n').rstrip('\n'), link)
 	return result
 
-def dictValWhereKeyContains(d:dict[str, tuple[str, str|None]], keyPart:str, caseSensitive=False) -> str | None:
+def dictValWhereKeyContains(d:dict[str, tuple[str, Optional[str]]], keyPart:str, caseSensitive=False) -> Optional[str]:
 	for k in d.keys():
 		if (caseSensitive and keyPart in k) or (not caseSensitive and keyPart.lower() in k.lower()):
 			return d[k]
