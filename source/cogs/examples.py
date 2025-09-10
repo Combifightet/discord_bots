@@ -23,9 +23,9 @@ To be able to send a colored text, you need to use the ansi language for your co
 ```
 All possible formats are:
 ```ansi
-\u001b[0;00m • 0: Normal
-\u001b[1;00m • 1: Bold
-\u001b[4;00m • 4: Underline
+ • 0: \u001b[0;00mNormal\u001b[0m
+ • 1: \u001b[1;00mBold\u001b[0m
+ • 4: \u001b[4;00mUnderline\u001b[0m
 ```
 
 All possible colors are:
@@ -47,6 +47,8 @@ All possible colors are:
 			 embed = embed,
 			# ephemeral = True # only for debuggin final version sould send an actual message
 		)
+	
+	# TODO: add a slash command for paginated data
 	
 
 async def setup(bot):
