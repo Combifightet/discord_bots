@@ -3,95 +3,8 @@ from discord.ext import commands
 from discord import app_commands
 import math
 
+from util.pagination import PaginatedView
 
-class PaginationView(discord.ui.View):
-    def __init__(self, data, items_per_page=10):
-        super().__init__(timeout=300)  # 5 minute timeout
-        self.data = data
-        self.items_per_page = items_per_page
-        self.current_page = 0
-        self.max_pages = math.ceil(len(data) / items_per_page)
-        
-        # Update button states
-        self.update_buttons()
-    
-    def update_buttons(self):
-        # Disable/enable buttons based on current page
-        self.first_page.disabled = self.current_page == 0
-        self.prev_page.disabled = self.current_page == 0
-        self.next_page.disabled = self.current_page >= self.max_pages - 1
-        self.last_page.disabled = self.current_page >= self.max_pages - 1
-    
-    def get_current_page_data(self):
-        start_idx = self.current_page * self.items_per_page
-        end_idx = start_idx + self.items_per_page
-        return self.data[start_idx:end_idx]
-    
-    def create_embed(self):
-        current_data = self.get_current_page_data()
-        
-        embed = discord.Embed(
-            title="📊 Paginated Data",
-            color=0x00ff88,
-            description=f"Showing items {self.current_page * self.items_per_page + 1}-{min((self.current_page + 1) * self.items_per_page, len(self.data))} of {len(self.data)}"
-        )
-        
-        # Create tabulated data display
-        data_text = "```\n"
-        data_text += f"{'ID':<4} | {'Name':<12} | {'Value':<10} | {'Status':<8}\n"
-        data_text += "-" * 42 + "\n"
-        
-        for item in current_data:
-            data_text += f"{item['id']:<4} | {item['name']:<12} | {item['value']:<10} | {item['status']:<8}\n"
-        
-        data_text += "```"
-        
-        embed.add_field(
-            name="Data Table",
-            value=data_text,
-            inline=False
-        )
-        
-        embed.set_footer(text=f"Page {self.current_page + 1}/{self.max_pages}")
-        
-        return embed
-    
-    @discord.ui.button(label='⏮️', style=discord.ButtonStyle.gray, disabled=True)
-    async def first_page(self, interaction: discord.Interaction, button: discord.ui.Button):
-        self.current_page = 0
-        self.update_buttons()
-        await interaction.response.edit_message(embed=self.create_embed(), view=self)
-    
-    @discord.ui.button(label='◀️', style=discord.ButtonStyle.primary, disabled=True)
-    async def prev_page(self, interaction: discord.Interaction, button: discord.ui.Button):
-        self.current_page -= 1
-        self.update_buttons()
-        await interaction.response.edit_message(embed=self.create_embed(), view=self)
-    
-    @discord.ui.button(label='🔢', style=discord.ButtonStyle.secondary)
-    async def page_info(self, interaction: discord.Interaction, button: discord.ui.Button):
-        await interaction.response.send_message(
-            f"Currently on page **{self.current_page + 1}** of **{self.max_pages}**\n"
-            f"Total items: **{len(self.data)}**",
-            ephemeral=True
-        )
-    
-    @discord.ui.button(label='▶️', style=discord.ButtonStyle.primary)
-    async def next_page(self, interaction: discord.Interaction, button: discord.ui.Button):
-        self.current_page += 1
-        self.update_buttons()
-        await interaction.response.edit_message(embed=self.create_embed(), view=self)
-    
-    @discord.ui.button(label='⏭️', style=discord.ButtonStyle.gray)
-    async def last_page(self, interaction: discord.Interaction, button: discord.ui.Button):
-        self.current_page = self.max_pages - 1
-        self.update_buttons()
-        await interaction.response.edit_message(embed=self.create_embed(), view=self)
-    
-    async def on_timeout(self):
-        # Disable all buttons when view times out
-        for item in self.children:
-            item.disabled = True
 
 
 class Examples(commands.Cog):
@@ -146,26 +59,95 @@ All possible colors are:
 
         await interaction.response.send_message(embed=embed)
 
+
     @app_commands.command(name = 'pagination',description = 'Display paginated data with navigation buttons')
     @app_commands.describe(items_per_page = 'The word to be looked up')
     async def pagination(self, interaction: discord.Interaction, items_per_page: int = 10):
         """Slash command to display paginated data"""
-        print(f'Pagination command invoked by {interaction.user} with items_per_page={items_per_page}')
-        
-        # Validate items_per_page
-        if items_per_page < 1 or items_per_page > 25:
-            await interaction.response.send_message(
-                "❌ Items per page must be between 1 and 25!",
-                ephemeral=True
-            )
-            return
-        
-        # Create the pagination view
-        view = PaginationView(self.sample_data, items_per_page)
-        embed = view.create_embed()
-        
-        await interaction.response.send_message(embed=embed, view=view)
+
+        await PaginatedView(
+            interaction=interaction,
+            total_pages=5
+        ).setup()
+
+
+
+
+    @app_commands.command(name = 'buttons',description = 'Display all possible button styles')
+    @app_commands.describe(enabled = 'Weather the buttons are enabled or disabled')
+    async def buttons(self, interaction: discord.Interaction, enabled:bool = True):
+        """Slash command to display all possible discord embed button styles"""
+
+        await ButtonsView(interaction=interaction, enabled=enabled).setup()
+
 
 
 async def setup(bot):
     await bot.add_cog(Examples(bot))
+
+
+
+### Buttons View Class ###
+
+class ButtonsView(discord.ui.View):
+    def __init__(self, interaction: discord.Interaction, enabled: bool = True):
+        self.interaction = interaction
+        self.enabled = enabled
+        super().__init__(timeout=300)  # doesn't accept new interaction after <timeout> seconds
+
+        link_button = discord.ui.Button(
+            emoji = '5️⃣',
+            label = 'link / _url_',
+            style = discord.ButtonStyle.link,
+            url = 'https://github.com/combifightet',
+            disabled=not self.enabled
+        )
+        self.add_item(link_button)
+
+        premium_button = discord.ui.Button(
+            style = discord.ButtonStyle.premium,
+            sku_id = 1416080458093170820, # 'buy me a coffe'
+            disabled = not self.enabled
+        )
+        self.add_item(premium_button)
+
+    @discord.ui.button(emoji='1️⃣', label='primary / _blurple_', style=discord.ButtonStyle.primary)
+    async def primary(self, interaction: discord.Interaction, button: discord.ui.Button):
+        pass
+
+    @discord.ui.button(emoji='2️⃣', label='secondary / _grey_ / _gray_', style=discord.ButtonStyle.secondary)
+    async def secondary(self, interaction: discord.Interaction, button: discord.ui.Button):
+        pass
+
+    @discord.ui.button(emoji='3️⃣', label='success / _green_', style=discord.ButtonStyle.success)
+    async def success(self, interaction: discord.Interaction, button: discord.ui.Button):
+        pass
+
+    @discord.ui.button(emoji='4️⃣', label='danger / _red_', style=discord.ButtonStyle.danger)
+    async def danger(self, interaction: discord.Interaction, button: discord.ui.Button):
+        pass
+
+    async def setup(self):
+        # Set the disabled state of all buttons after initialization
+        for item in self.children:
+            item.disabled = not self.enabled
+
+        embed:discord.Embed = discord.Embed(
+            title='Buttons - Example',
+            description='A small Embed to display all 6 different button types',
+            colour=0xac91b4
+        )
+        embed.set_author(
+            name='Combifightet',
+            url='https://github.com/combifightet',
+            icon_url='https://avatars.githubusercontent.com/u/47188809'
+        )
+        await self.interaction.response.send_message(embed=embed, view=self)
+
+
+
+    async def on_timeout(self):
+        # Disable all buttons when view times out
+        # for item in self.children:
+        #     item.disabled = True
+        pass
