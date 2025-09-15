@@ -2,6 +2,7 @@ import discord
 from discord.ext import commands
 from discord import app_commands
 import math
+from typing import Optional
 
 from util.pagination import PaginatedView
 
@@ -38,9 +39,9 @@ To be able to send a colored text, you need to use the ansi language for your co
 ```
 All possible formats are:
 ```ansi
- • 0: \u001b[0;00mNormal\u001b[0m
- • 1: \u001b[1;00mBold\u001b[0m
- • 4: \u001b[4;00mUnderline\u001b[0m
+• 0: \u001b[0;00mNormal\u001b[0m
+• 1: \u001b[1;00mBold\u001b[0m
+• 4: \u001b[4;00mUnderline\u001b[0m
 ```
 
 All possible colors are:
@@ -61,16 +62,14 @@ All possible colors are:
 
 
     @app_commands.command(name = 'pagination',description = 'Display paginated data with navigation buttons')
-    @app_commands.describe(items_per_page = 'The word to be looked up')
-    async def pagination(self, interaction: discord.Interaction, items_per_page: int = 10):
+    async def pagination(self, interaction: discord.Interaction):
         """Slash command to display paginated data"""
 
         await PaginatedView(
-            interaction=interaction,
-            total_pages=5
+            interaction = interaction,
+            total_pages = 4,
+            get_page = getPaginationEmbed
         ).setup()
-
-
 
 
     @app_commands.command(name = 'buttons',description = 'Display all possible button styles')
@@ -85,6 +84,104 @@ All possible colors are:
 async def setup(bot):
     await bot.add_cog(Examples(bot))
 
+
+
+### Paginaation Embed Generator ###
+
+
+def  getPaginationEmbed(index:int=0, embed:Optional[discord.Embed]=None) -> discord.Embed:
+    max_pages:int = len(example_data)
+    index = max(0, min(index, max_pages-1)) # clamp to index to the range [0, max_pages)
+    if embed is None:
+        embed = discord.Embed(
+            color = 0xaa92b4,
+            title = 'Pagination - Example',
+            description = 'A small Embed to display paginated data\n ​  '
+        )
+    embed.set_author(
+        name='Combifightet',
+        url='https://github.com/combifightet',
+        icon_url='https://avatars.githubusercontent.com/u/47188809'
+    )
+    embed.add_field(
+        name = f'Example ({index+1}/{max_pages})',
+        value = example_data[index],
+        inline = False
+    )
+    
+    return embed
+
+example_data:list[str] = [
+    """
+ ​  
+ 0. Lorem ipsum dolor sit amet aliquyam autem lorem exerci aliquam lorem kasd lorem laoreet erat invidunt
+     ​  
+    Gubergren        [**Euis.**](https://www.lipsum.com/)
+     ​  
+    **Sadipscing**
+   ```
+   • Vel vero kasd erat et gubergren dolore
+   • Eros et lorem eirmod at sit magna
+   • Magna commodo kasd lorem eum
+   • Eros erat consequat diam vero tempor ut labore erat et ea odio sed ea
+   • Duo et dolore eum sed sea vulputate
+   • Ut dolore illum clita lorem ipsum lorem rebum ut euism
+   ```
+ ​  
+ 0. Vero invidunt et clita dolor at duis nonumy ut tempor est sanctus ipsum
+     ​  
+    **Sadipscing**
+   ```
+   • Sadipscing gubergren et ea
+   • Nonumy justo et exerci ipsum consetetur ullamcorper
+   ```
+""",
+"""
+ 0. Justo kasd vel ea commodo sadipscing sed amet et
+     ​  
+    **Sadipscing**
+   ```
+   • Diam aliquyam et quod elitr luptatum tempor sea diam
+   • Voluptua dolor stet dolores amet
+   • Ipsum ut justo duis kasd no sanctus diam
+   • Praesent dolores et sed gubergren voluptua elitr
+   ```
+ ​  
+ 0. Stet clita invidunt ut in volutpat lorem rebum eros accusam accusam erat dolor
+     ​  
+    **Sadipscing**
+   ```
+   • Dolore ex stet eleifend est
+   • Dolore et tempor accusam est sed sea
+   ```
+ ​  
+ 0. Tation a       [**invidunt**](https://www.lipsum.com/)
+     ​  
+    **Sadipscing**
+   ```
+   • Amet no et dolores in dolore stet
+   ```
+""",
+"""
+Est et dolor sanctus nonumy consetetur diam labore, ut facer duo volutpat sea accumsan accusam
+ ​  
+Luptatum       **Feugait**
+ ​  
+**Sadipscing**
+```
+• Zzril ipsum zzril dolore nisl
+```
+""",
+"""
+ 0. Augue dolor option dolores et
+     ​  
+    Luptatum       **Takimata**
+ ​  
+ 0. Luptatum       **ullamcortakimata**
+     ​  
+    Tation a       [**Ullamcorper**](https://www.lipsum.com/)
+"""
+]
 
 
 ### Buttons View Class ###
@@ -133,9 +230,9 @@ class ButtonsView(discord.ui.View):
             item.disabled = not self.enabled
 
         embed:discord.Embed = discord.Embed(
+            colour=0xac91b4,
             title='Buttons - Example',
             description='A small Embed to display all 6 different button types',
-            colour=0xac91b4
         )
         embed.set_author(
             name='Combifightet',
