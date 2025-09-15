@@ -47,7 +47,7 @@ class PaginatedView(discord.ui.View):
 			self.children[0].disabled = True
 			if self.index <=0:
 				self.children[1].disabled = True
-		elif self.index >= self.total_pages-2:
+		if self.index >= self.total_pages-2:
 			self.children[3].disabled = True
 			if self.index >= self.total_pages-1:
 				self.children[2].disabled = True
