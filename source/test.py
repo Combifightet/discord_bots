@@ -2,8 +2,10 @@ from bs4 import BeautifulSoup
 from bs4.element import ResultSet, Tag
 import requests
 
+from typing import Optional
+
 class Meaning:
-	def __init__(self, meaning:str|None, infos:dict[str, tuple[str, str|None]]|None, examples:list[str]):
+	def __init__(self, meaning:Optional[str], infos:Optional[dict[str, tuple[str, Optional[str]]]], examples:Optional[list[str]]):
 		"""
 		Class that holds a meaning object, only used for structuring data
 		Args:
@@ -30,6 +32,38 @@ class Meaning:
 				examplesString += f'\n   - {example}'
 
 		return f'{self.meaning}\n{infoString}\n{examplesString}'
+	
+	def toMdListItem(self) -> str:
+		blank_line:str = ' ​  '
+		result:str = f'{blank_line}\n0. '
+
+		items:list[str] = []
+
+		if self.meaning:
+			items.append(self.meaning)
+
+		if self.infos:
+			for key in self.infos.keys():
+				value:tuple[str, Optional[str]] = self.infos[key]
+				if value[1]:
+					items.append(f'{key}        [**{value[0]}**]({value[1]})')
+				else:
+					items.append(f'{key}        **{value[0]}**')
+
+		if self.examples:
+			examples_str:str = '```'
+			for example in self.examples:
+				examples_str += f'\n• {example}'
+			examples_str += '\n```'
+			items.append(examples_str)
+		
+		if items:
+			result += items.pop(0)
+		for item in items:
+			result += f'\n{blank_line}\n{item}'
+		return result
+
+
 	
 
 def tuplesToDict(tuples:ResultSet) -> dict[str, tuple[str, str|None]]:
@@ -62,10 +96,6 @@ def main():
 	url:str = soup.find('meta', property='og:url')['content']
 	imagUrl:str = soup.find('meta', property='og:image:url')['content']
 
-	tuples:ResultSet = soup.find_all('dl', class_='tuple')
-
-	infos:dict[str, str] = tuplesToDict(tuples)
-
 	# <div class="division "  id="bedeutungen">
 	meaningHtml:Tag = soup.find('div', class_='division', id='bedeutungen')
 	meaningTitle:str = meaningHtml.find('h2').text
@@ -88,20 +118,31 @@ def main():
 			
 			subMeanings.append(Meaning(meaning, infos, examples))
 			print('--------------------------------------------')
-			print(subMeanings[-1])
+			print(subMeanings[-1].toMdListItem())
 		meanings.append(subMeanings)
 			
+	
+	tuples:ResultSet = soup.find_all('dl', class_='tuple')
+	pronounciation:Optional[Tag] = None
+	for tup in tuples:
+		pronounciation = tup.find(class_='ipa')
+		if pronounciation:
+			break
+
+	infos:dict[str, str] = tuplesToDict(tuples)
 
 	# Meaning()
 
+	# _**▃▃ ▃▃ ▁▁▁ ▁▁▁ ▁▁▁**_
 
+	# ▰▰▱▱▱
 
 	print('\n')
-	print('Title:     ', str(title).replace('\\xad','').replace('\xad', ''))
+	print('Title:     ', title[0].replace('\\xad','').replace('\xad', ''))
 	print('Url:       ', url)
-	print('Wortart:   ', dictValWhereKeyContains(infos, 'wortart'))
-	print('Häufigkeit:', dictValWhereKeyContains(infos, 'häufigkeit')) # - TODO: these need postprocessing
-	print('Aussprache:', dictValWhereKeyContains(infos, 'aussprache')) # - TODO: these need postprocessing
+	print('Wortart:   ', dictValWhereKeyContains(infos, 'wortart')[0])
+	print('Häufigkeit:', f'_**{dictValWhereKeyContains(infos, 'häufigkeit')[0].replace('▒', '▃▃ ').replace('░', '▁▁▁')}**_')
+	print('Aussprache:', pronounciation.text)
 	# --- Rechtschreibung ---
 	# --- Bedeutungen (n) ---            ! Wichtig
 	print(meaningTitle)
