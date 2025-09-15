@@ -83,8 +83,6 @@ def dictValWhereKeyContains(d:dict[str, tuple[str, str|None]], keyPart:str, case
 			return d[k]
 	return None
 
-def generateMeaningsField(meanings:list[Meaning]):
-	pass
 
 def main():
 	word = 'Titel'
@@ -138,11 +136,11 @@ def main():
 	# ▰▰▱▱▱
 
 	print('\n')
-	print('Title:     ', title[0].replace('\\xad','').replace('\xad', ''))
+	print('Title:     ', f'**{title[0].replace('\\xad','').replace('\xad', '')}**')
 	print('Url:       ', url)
-	print('Wortart:   ', dictValWhereKeyContains(infos, 'wortart')[0])
+	print('Wortart:   ', f'**{dictValWhereKeyContains(infos, 'wortart')[0]}**')
 	print('Häufigkeit:', f'_**{dictValWhereKeyContains(infos, 'häufigkeit')[0].replace('▒', '▃▃ ').replace('░', '▁▁▁')}**_')
-	print('Aussprache:', pronounciation.text)
+	print('Aussprache:', f'**{pronounciation.text}**')
 	# --- Rechtschreibung ---
 	# --- Bedeutungen (n) ---            ! Wichtig
 	print(meaningTitle)
