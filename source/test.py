@@ -67,20 +67,20 @@ class Meaning:
 	
 
 def tuplesToDict(tuples:ResultSet) -> dict[str, tuple[str, str|None]]:
-	result:dict[str, str] = {}
-	for tuple in tuples:
-		linkTag:Tag = tuple.find('dd').find('a')
-		link:str = None
-		if linkTag is not None:
-			link = linkTag.get('href')
+	result:dict[str, tuple[str, str|None]] = {}
+	for tup in tuples:
+		linkTag:Tag = tup.find('dd').find('a')
+		link:Optional[str] = None
+		if linkTag:
+			link = str(linkTag.get('href'))
 
-		result[tuple.find('dt').text] = (tuple.find('dd').text.lstrip('\n').rstrip('\n'), link)
+		result[tup.find('dt').text] = (tup.find('dd').text.lstrip('\n').rstrip('\n'), link)
 	return result
 
 def dictValWhereKeyContains(d:dict[str, tuple[str, str|None]], keyPart:str, caseSensitive=False) -> str | None:
 	for k in d.keys():
 		if (caseSensitive and keyPart in k) or (not caseSensitive and keyPart.lower() in k.lower()):
-			return d[k]
+			return d[k][0]
 	return None
 
 

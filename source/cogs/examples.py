@@ -1,7 +1,7 @@
 import discord
 from discord.ext import commands
 from discord import app_commands
-import math
+
 from typing import Optional
 
 from util.pagination import PaginatedView
