@@ -71,6 +71,3 @@ class PaginatedView(discord.ui.View):
 	async def last(self, interaction: discord.Interaction, button: discord.ui.Button):
 		self.index = self.total_pages-1
 		await self.__update(interaction=interaction)
-
-
-# https://stackoverflow.com/questions/76247812/how-to-create-pagination-embed-menu-in-discord-py

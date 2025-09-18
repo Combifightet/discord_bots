@@ -4,7 +4,7 @@ from discord import app_commands
 
 from typing import Optional
 
-from util.pagination import PaginatedView
+from ui.pagination import PaginatedView
 
 
 
@@ -244,7 +244,6 @@ class ButtonsView(discord.ui.View):
 
 
     async def on_timeout(self):
-        # Disable all buttons when view times out
         # for item in self.children:
         #     item.disabled = True
         pass

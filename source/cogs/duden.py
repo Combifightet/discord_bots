@@ -10,7 +10,7 @@ from bs4.element import ResultSet, Tag
 import requests
 
 
-from util.pagination import PaginatedView
+from ui.pagination import PaginatedView
 
 
 class Duden(commands.Cog):
