@@ -30,6 +30,10 @@ async def setup(bot):
 
 class HelpView(TranslatedView):
 	'''Help view that extends TranslatedView for language switching.'''
+
+	def __init__(self, default_language: str = 'en'):
+		self.selected_option = None  # Store the selected option index
+		super().__init__(default_language)
 	
 	def _build_content(self):
 		'''Build the help view content with current language.'''
@@ -37,15 +41,37 @@ class HelpView(TranslatedView):
 		# TODO: make selected option persistent on rebuild due to language change
 		help_type_select = discord.ui.Select(
 			options=[
-				discord.SelectOption(label=HELP_LANGUAGES['select_option_1'][self.language_code], description='/modul [name]'),
-				discord.SelectOption(label=HELP_LANGUAGES['select_option_2'][self.language_code], description='/search [name]'),
-				discord.SelectOption(label=HELP_LANGUAGES['select_option_3'][self.language_code], description='/filter [name]'),
-				discord.SelectOption(label=HELP_LANGUAGES['select_option_4'][self.language_code], description='/semesterplan'),
-				discord.SelectOption(label=HELP_LANGUAGES['select_option_5'][self.language_code])
+				discord.SelectOption(
+					label=HELP_LANGUAGES['select_option_1'][self.language_code],
+					description='/modul [name]',
+					default=(self.selected_option == 0),
+				),
+				discord.SelectOption(
+					label=HELP_LANGUAGES['select_option_2'][self.language_code],
+					description='/search [name]',
+					default=(self.selected_option == 1),
+				),
+				discord.SelectOption(
+					label=HELP_LANGUAGES['select_option_3'][self.language_code],
+					description='/filter [name]',
+					default=(self.selected_option == 2),
+				),
+				discord.SelectOption(
+					label=HELP_LANGUAGES['select_option_4'][self.language_code],
+					description='/semesterplan',
+					default=(self.selected_option == 3),
+				),
+				discord.SelectOption(
+					label=HELP_LANGUAGES['select_option_5'][self.language_code],
+					default=(self.selected_option == 4),
+				),
 			]
 		)
 
 		async def select_callback(interaction: discord.Interaction):
+			self.selected_option = help_type_select.options.index(
+				next(opt for opt in help_type_select.options if opt.value == help_type_select.values[0])
+			)
 			await interaction.response.send_message(
 				f'You selected: {help_type_select.values[0]}', ephemeral=True
 			)
@@ -56,7 +82,7 @@ class HelpView(TranslatedView):
 			Container(
 				Section(
 					TextDisplay(
-						f'# {HELP_LANGUAGES['help'][self.language_code]}'
+						f"# {HELP_LANGUAGES['help'][self.language_code]}"
 					),
 					accessory=self._create_language_toggle()
 				),

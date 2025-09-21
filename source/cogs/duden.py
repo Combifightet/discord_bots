@@ -75,6 +75,10 @@ class Duden(commands.Cog):
 
 		blank_line:str = ' ​  '
 	
+		pronunciation_str = ""
+		if pronounciation is not None:
+			pronunciation_str = f"\nAussprache:		**{pronounciation.text}**\n{blank_line}"
+
 		embed: discord.Embed = discord.Embed(
 			title = title[0].replace('\\xad','').replace('\xad', ''),
 			url = url,
@@ -84,17 +88,10 @@ class Duden(commands.Cog):
 Wortart:		**{dictValWhereKeyContains(infos, 'wortart')[0]}**
 {blank_line}
 Häufigkeit:		_**{dictValWhereKeyContains(infos, 'häufigkeit')[0].replace('▒', '▃▃ ').replace('░', '▁▁▁ ')}**_
-{blank_line}{'' if pronounciation is None else f'\nAussprache:		**{pronounciation.text}**\n{blank_line}'}
+{blank_line}{pronunciation_str}
 ''',
 			timestamp = datetime.now()
 		)
-		# embed.set_image(url = imagUrl)
-		# embed.set_thumbnail(url='https://upload.wikimedia.org/wikipedia/commons/thumb/a/af/Duden_Logo_2017.svg/330px-Duden_Logo_2017.svg.png')
-
-		# await interaction.response.send_message(
-		# 	embed = embed,
-		# 	ephemeral = True # only for debuggin final version sould send an actual message
-		# )
 
 		def updatePaginationEmbed(index:int):
 			desc:str = ''
